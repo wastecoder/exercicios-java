@@ -9,17 +9,17 @@ public class recursiva4 {
     //n(1) = (1/1) ou (1/1) + (1/1) = ???
     public static void main(String[] args) {
         Scanner leia = new Scanner(System.in);
-        float numero, retorno;
+        float ultimo, retorno;
 
         System.out.print("Digite o final da série: ");
-        numero = leia.nextFloat();
+        ultimo = leia.nextFloat();
 
-        retorno = somaSerie(numero, 1);
+        retorno = somaSerie(ultimo, 1);
         System.out.printf("\nSoma da série = %.2f", retorno);
     }
 
     static float somaSerie(float numerador, float denominador) {
-        if (numerador != 1) {
+        if (numerador > 1) {
 //            System.out.print("(" + numerador + "/" + denominador + ") + ");
             return (numerador / denominador) + somaSerie(--numerador, ++denominador);
         } else {
