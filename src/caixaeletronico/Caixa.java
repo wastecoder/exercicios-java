@@ -88,7 +88,7 @@ public class Caixa {
         } else if (valorDesejado > saldoCaixa) {
             System.out.println(">> ERRO: EXCEDEU O LIMITE DO CAIXA - R$" + saldoCaixa);
         } else {
-            coletarEstatisticas(input, bancos, valorDesejado);
+            coletarEstatisticas(bancos, coletarBanco(input), valorDesejado);
 
             while (valorDesejado % 5 != 0 && notasCaixa.contains(2)) { //Retira números não múltiplos de 5 até virar múltiplo dele.
                 System.out.println("RETIRANDO >>>> 2");
@@ -126,7 +126,8 @@ public class Caixa {
             System.out.println(">> ERRO: NOTA [" + notaDesejada + "] INVÁLIDA");
         } else {
             int valorDesejado = notaDesejada * quantidadeDesejada;
-            coletarEstatisticas(input, bancos, valorDesejado); // Pode bugar se acabar notas pequenas, aumentando o valor o do banco mesmo sem o cliente receber as notas
+            int valorAuxiliar = valorDesejado;
+            int codigoBanco = coletarBanco(input);
 
             while (valorDesejado % 5 != 0 && notasCaixa.contains(2)) { //TRANSFORMAR EM MÉTODO
                 System.out.println("RETIRANDO >>>> 2");
@@ -142,6 +143,8 @@ public class Caixa {
             for (int notaAtual : notasValidas) {
                 valorDesejado = sacarRepeticao(notasCaixa, valorDesejado, notaAtual);
             }
+
+            coletarEstatisticas(bancos, codigoBanco, valorAuxiliar - valorDesejado);
         }
     }
 
@@ -157,7 +160,7 @@ public class Caixa {
 
 
 
-    public static void coletarEstatisticas(Scanner input, int[][] bancos, int valorSacado) {
+    public static int coletarBanco(Scanner input) {
         System.out.println(">> [1] Banco do Brasil");
         System.out.println(">> [2] Santander");
         System.out.println(">> [3] Itaú");
@@ -167,11 +170,15 @@ public class Caixa {
 
         if (codigoBanco < 1 || codigoBanco > 4) {
             System.out.println(">> ERRO: CÓDIGO DE BANCO [" + codigoBanco + "] INVÁLIDO!");
-            coletarEstatisticas(input, bancos, valorSacado);
+            coletarBanco(input);
         }
 
-        //bancos[id][0] = menor valor sacado
-        //bancos[id][1] = maior valor sacado
+        return codigoBanco;
+    }
+
+    public static void coletarEstatisticas(int[][] bancos, int codigoBanco, int valorSacado) {
+        //bancos[id][0] = maior valor sacado
+        //bancos[id][1] = menor valor sacado
         //bancos[id][2] = total sacado
         //bancos[id][3] = média de saque
         //bancos[id][4] = quantidade de saque
@@ -180,9 +187,9 @@ public class Caixa {
             bancos[codigoBanco][0] = valorSacado;
             bancos[codigoBanco][1] = valorSacado;
         } else {
-            if (valorSacado < bancos[codigoBanco][0]) {
+            if (valorSacado > bancos[codigoBanco][0]) {
                 bancos[codigoBanco][0] = valorSacado;
-            } else if (valorSacado > bancos[codigoBanco][1]) {
+            } else if (valorSacado < bancos[codigoBanco][1]) {
                 bancos[codigoBanco][1] = valorSacado;
             }
         }
@@ -203,7 +210,7 @@ public class Caixa {
                 case 3 -> System.out.println("Caixa");
             }
 
-            for (int y = 0; y < 4; y++) { //Até 4 para não exibir a quantidade de saque
+            for (int y = 0; y < 4; y++) { //Até 3 para não exibir a quantidade de saque
                 switch (y) {
                     case 0 -> System.out.print("> Maior valor sacado: R$");
                     case 1 -> System.out.print("> Menor valor sacado: R$");
