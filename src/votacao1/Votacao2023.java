@@ -8,15 +8,15 @@ import java.util.Comparator;
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Votacao2023 extends Votacao {
-    public Votacao2023[] cadastrarVotos(Votacao2023[] votos) {
+public class Votacao2023 {
+    public Votacao[] cadastrarVotos(Votacao[] votos) {
         System.out.println("\n>>>> CADASTRAR " + votos.length + " VOTOS:");
 
         //Fórmula do aleatório: (min, max + 1)
         for (int i = 0; i < votos.length; i++) {
-            votos[i] = new Votacao2023();
-            votos[i].setNumeroSecao(ThreadLocalRandom.current().nextInt(0, 10 + 1));
-            votos[i].setNumeroCandidato(ThreadLocalRandom.current().nextInt(0, 300 + 1));
+            votos[i] = new Votacao();
+            votos[i].numeroSecao = ThreadLocalRandom.current().nextInt(0, 10 + 1);
+            votos[i].numeroCandidato = ThreadLocalRandom.current().nextInt(0, 300 + 1);
 
             System.out.println("> " + i + " ==> " + votos[i]);
         }
@@ -25,13 +25,13 @@ public class Votacao2023 extends Votacao {
         return votos;
     }
 
-    public Votacao2023[] ordenarPorSecao(Votacao2023[] votos) {
+    public Votacao[] ordenarPorSecao(Votacao[] votos) {
         if (votosVazios(votos)) return votos;
 
-        // Ordena votos[] crescentemente pelo numeroSecao()
+        // Ordena votos[] crescentemente pelo numeroSecao
         Arrays.sort(votos, new Comparator<Votacao>() {
             public int compare(Votacao vot1, Votacao vot2) {
-                return Integer.compare(vot1.getNumeroSecao(), vot2.getNumeroSecao());
+                return Integer.compare(vot1.numeroSecao, vot2.numeroSecao);
             }
         });
 
@@ -39,14 +39,14 @@ public class Votacao2023 extends Votacao {
         return votos;
     }
 
-    public void gravarVotacao(Votacao2023[] votos) throws IOException {
+    public void gravarVotacao(Votacao[] votos) throws IOException {
         if (votosVazios(votos)) return;
 
         String nomeArquivo = "Votacao2023.txt";
         BufferedWriter gravar = new BufferedWriter(new FileWriter(nomeArquivo));
 
-        for (Votacao2023 voto : votos) {
-            gravar.write("NumeroSecao: " + voto.getNumeroSecao() + "; NumeroCandidato: " + voto.getNumeroCandidato());
+        for (Votacao voto : votos) {
+            gravar.write("NumeroSecao: " + voto.numeroSecao + "; NumeroCandidato: " + voto.numeroCandidato);
             gravar.newLine();
         }
 
@@ -54,7 +54,7 @@ public class Votacao2023 extends Votacao {
         System.out.println("\n>>>> ARQUIVO 'Votação2023.txt' GERADO!");
     }
 
-    public void mostrarIndicadores(Votacao2023[] votos) {
+    public void mostrarIndicadores(Votacao[] votos) {
         if (votosVazios(votos)) return;
 
         Scanner input = new Scanner(System.in);
@@ -90,19 +90,16 @@ public class Votacao2023 extends Votacao {
                 case 4:
                     this.primeiros10Candidatos(votos);
                     break;
-                case 9:
-                    break;
             }
-
         } while (escolha != 9);
     }
 
-    public void eleitoresPorSecao(Votacao2023[] votos) {
+    public void eleitoresPorSecao(Votacao[] votos) {
         System.out.println("\n>>>> QUANTIDADE DE ELEITORES POR SEÇÃO");
 
         int[] secoes = new int[11]; //Seções vão de 0 a 10
-        for (Votacao2023 voto : votos) {
-            secoes[voto.getNumeroSecao()]++;
+        for (Votacao voto : votos) {
+            secoes[voto.numeroSecao]++;
         }
 
         for (int i = 0; i < secoes.length; i++) {
@@ -110,12 +107,12 @@ public class Votacao2023 extends Votacao {
         }
     }
 
-    public void maiorEMenorSecao(Votacao2023[] votos) {
+    public void maiorEMenorSecao(Votacao[] votos) {
         System.out.println("\n>>>> SEÇÃO COM MAIOR E MENOR NÚMERO DE ELEITORES");
 
         int[] secoes = new int[11]; //Seções vão de 0 a 10
-        for (Votacao2023 voto : votos) {
-            secoes[voto.getNumeroSecao()]++;
+        for (Votacao voto : votos) {
+            secoes[voto.numeroSecao]++;
         }
 
         int maior = 0, menor = 0;
@@ -132,12 +129,12 @@ public class Votacao2023 extends Votacao {
         System.out.println("> Seção com menos eleitores: " + menor + "; Quantidade: " + secoes[menor]);
     }
 
-    public void votosPorCandidato(Votacao2023[] votos) {
+    public void votosPorCandidato(Votacao[] votos) {
         System.out.println("\n>>>> QUANTIDADE DE VOTOS POR CANDIDATO");
 
         int[] candidatos = new int[301]; //Candidatos vão de 0 a 300
-        for (Votacao2023 voto : votos) {
-            candidatos[voto.getNumeroCandidato()]++;
+        for (Votacao voto : votos) {
+            candidatos[voto.numeroCandidato]++;
         }
 
         for (int i = 0; i < candidatos.length; i++) {
@@ -145,7 +142,7 @@ public class Votacao2023 extends Votacao {
         }
     }
 
-    public void primeiros10Candidatos(Votacao2023[] votos) {
+    public void primeiros10Candidatos(Votacao[] votos) {
         System.out.println("\n>>>> OS 10 CANDIDATOS COM MAIS VOTOS");
 
         //Coluna 0: número do candidato
@@ -155,18 +152,17 @@ public class Votacao2023 extends Votacao {
             candidatos[x][0] = x;
 
             if (x < votos.length) { //Para não estourar o limite do index
-                candidatos[votos[x].getNumeroCandidato()][1]++;
+                candidatos[votos[x].numeroCandidato][1]++;
             }
         }
 
         //Ordena a matriz "candidatos" em ordem decrescente a partir da segunda coluna
-        Comparator<int[]> comparator = new Comparator<int[]>() {
+        Arrays.sort(candidatos, new Comparator<int[]>() {
             @Override
             public int compare(int[] o1, int[] o2) {
                 return Integer.compare(o2[1], o1[1]);   //Para ordem crescente, basta inverter o2 com o1
             }
-        };
-        Arrays.sort(candidatos, comparator); //Chama o método acima. Dá para juntar eles, como no método ordenarPorSecao().
+        });
 
         for (int x = 0; x < 10; x++) {
             System.out.println("> " + (x + 1) + "º candidato (" + candidatos[x][0] + ") = " + candidatos[x][1] + " votos");
@@ -174,7 +170,7 @@ public class Votacao2023 extends Votacao {
     }
 
 
-    public boolean votosVazios(Votacao2023[] votos) {
+    public boolean votosVazios(Votacao[] votos) {
         if (votos[0] == null) {
             System.out.println("\n>>>> ERRO: Votos vazios, cadastre primeiro!");
             return true;

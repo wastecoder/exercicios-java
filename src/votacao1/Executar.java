@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class Executar {
     public static void main(String[] args) throws IOException {
-        Votacao2023[] votacao2023 = new Votacao2023[200];
+        Votacao[] votos = new Votacao[200];
         Votacao2023 votacao = new Votacao2023();
         Scanner input = new Scanner(System.in);
         int escolha;
@@ -29,19 +29,19 @@ public class Executar {
 
             switch (escolha) {
                 case 1:
-                    votacao2023 = votacao.cadastrarVotos(votacao2023);
+                    votos = votacao.cadastrarVotos(votos);
                     break;
                 case 2:
-                    votacao2023 = votacao.ordenarPorSecao(votacao2023);
+                    votos = votacao.ordenarPorSecao(votos);
                     break;
                 case 3:
-                    votacao.gravarVotacao(votacao2023);
+                    votacao.gravarVotacao(votos);
                     break;
                 case 4:
-                    votacao.mostrarIndicadores(votacao2023);
+                    votacao.mostrarIndicadores(votos);
                     break;
                 case 9:
-                    System.out.println("\n>>>> PROGRAMA FINALIZADO!\n");
+                    System.out.println("\n>>>> PROGRAMA FINALIZADO!");
                     break;
             }
 
